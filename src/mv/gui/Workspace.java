@@ -5,6 +5,7 @@
  */
 package mv.gui;
 
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import saf.components.AppWorkspaceComponent;
 import mv.MapViewerApp;
@@ -19,7 +20,16 @@ public class Workspace extends AppWorkspaceComponent {
     public Workspace(MapViewerApp initApp) {
         app = initApp;
         workspace = new Pane();
+	    initGUI();
     }
+
+	public void initGUI(){
+		removeButtons();
+
+
+
+	}
+
 
     @Override
     public void reloadWorkspace() {
@@ -30,4 +40,10 @@ public class Workspace extends AppWorkspaceComponent {
     public void initStyle() {
         
     }
+
+	public void removeButtons(){
+		FlowPane flowPane = (FlowPane) app.getGUI().getAppPane().getTop();
+		flowPane.getChildren().remove(0);
+		flowPane.getChildren().remove(1);
+	}
 }

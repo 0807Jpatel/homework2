@@ -24,7 +24,9 @@ public class FileManager implements AppFileComponent {
 
     @Override
     public void loadData(AppDataComponent data, String filePath) throws IOException {
-        
+
+
+
     }
     
     public double getDataAsDouble(JsonObject json, String dataName) {
