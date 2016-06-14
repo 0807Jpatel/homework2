@@ -8,11 +8,10 @@ package mv.file;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import javax.json.Json;
-import javax.json.JsonNumber;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import javax.json.JsonValue;
+import java.util.ArrayList;
+import javax.json.*;
+
+import mv.data.DataManager;
 import saf.components.AppDataComponent;
 import saf.components.AppFileComponent;
 
@@ -22,10 +21,52 @@ import saf.components.AppFileComponent;
  */
 public class FileManager implements AppFileComponent {
 
+	private static final String JSON_NUMBER_OF_SUBREGIONS =
+			"NUMBER_OF_SUBREGIONS";
+
+	private static final String JSON_SUBREGIONS = "SUBREGIONS";
+
+	private static final String JSON_NUMBER_OF_SUBREGION_POLYGONS =
+			"NUMBER_OF_SUBREGION_POLYGONS";
+
+	private static final String JSON_SUBREGION_POLYGONS = "SUBREGION_POLYGONS";
+
+	private static final String JSON_X = "X";
+	private static final String JSON_Y = "Y";
+
     @Override
     public void loadData(AppDataComponent data, String filePath) throws IOException {
+	    DataManager dataManager = (DataManager)data;
 
+		JsonObject jsonObject = loadJSONFile(filePath);
+	    int numberOfSubRegions = jsonObject.getInt(JSON_NUMBER_OF_SUBREGIONS);
+	    JsonArray firstSubRegions = jsonObject.getJsonArray(JSON_SUBREGIONS);
 
+	    ArrayList<Double> xCord = new ArrayList<>();
+	    ArrayList<Double> yCord = new ArrayList<>();
+
+	    for(int x = 0; x < numberOfSubRegions; x++){
+		    JsonObject subRegionItem = firstSubRegions.getJsonObject(x);
+		    int numberOfPolygons = subRegionItem.getInt
+				    (JSON_NUMBER_OF_SUBREGION_POLYGONS);
+		    JsonArray subPolygons = subRegionItem.getJsonArray
+				    (JSON_SUBREGION_POLYGONS);
+
+		    for(int z = 0; z < numberOfPolygons; z++) {
+			    JsonArray jsonArray = subPolygons.getJsonArray(z);
+
+			    for(int q = 0; q < jsonArray.size(); q++){
+					JsonObject xyObject = jsonArray.getJsonObject(q);
+				    xCord.add(getDataAsDouble(xyObject, JSON_X));
+				    yCord.add(getDataAsDouble(xyObject, JSON_Y));
+			    }
+
+		    }
+
+	    }
+
+	    dataManager.setX(xCord.toArray(new Double[xCord.size()]));
+	    dataManager.setY(yCord.toArray(new Double[yCord.size()]));
 
     }
     

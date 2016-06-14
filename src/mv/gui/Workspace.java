@@ -15,7 +15,8 @@ import mv.MapViewerApp;
  * @author McKillaGorilla
  */
 public class Workspace extends AppWorkspaceComponent {
-    MapViewerApp app;
+    private MapViewerApp app;
+
     
     public Workspace(MapViewerApp initApp) {
         app = initApp;
