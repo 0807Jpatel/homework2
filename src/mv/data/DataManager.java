@@ -30,6 +30,6 @@ public class DataManager implements AppDataComponent {
 	@Override
 
     public void reset() {
-
+		subRegions = new SubRegions[0];
     }
 }

@@ -34,7 +34,7 @@ public class SubRegions {
 			int c = x.get(q).length;
 			double[] temp = new double[c];
 			for(int i = 0; i < c; i++){
-				temp[i] =  x.get(q)[i];
+				temp[i] =  ((x.get(q)[i] + 180)/360) * width;
 			}
 			xCord.add(temp);
 		}
@@ -47,26 +47,11 @@ public class SubRegions {
 			int c = y.get(q).length;
 			double[] temp = new double[c];
 			for(int i = 0; i < c; i++){
-				temp[i] =  (y.get(q)[i]) * -1;
+				temp[i] =  ((y.get(q)[i] * -1 + 90)/180) * height;
 			}
 			yCord.add(temp);
 		}
 		return yCord;
 	}
 
-	//	public double[] getXCord(){
-//		xCord = new double[x.length];
-//		for(int z = 0; z < x.length; z++){
-//			xCord[z] = x[z];
-//		}
-//		return xCord;
-//	}
-//
-//	public double[] getYCord(){
-//		yCord = new double[y.length];
-//		for(int z = 0; z < y.length; z++){
-//			yCord[z] = y[z];
-//		}
-//		return yCord;
-//	}
 }
