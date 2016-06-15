@@ -9,46 +9,26 @@ import mv.MapViewerApp;
  */
 public class DataManager implements AppDataComponent {
     MapViewerApp app;
-	Double[] x;
-	Double[] y;
-	double[] xCord;
-	double[] yCord;
+	private SubRegions[] subRegions;
 
 	public DataManager(MapViewerApp initApp) {
         app = initApp;
     }
 
-	public Double[] getX() {
-		return x;
+	public void inisubRegions(int NumberOfSubregions){
+		subRegions = new SubRegions[NumberOfSubregions];
 	}
 
-	public void setX(Double[] x) {
-		this.x = x;
+	public SubRegions[] getSubRegions() {
+		return subRegions;
 	}
 
-	public Double[] getY() {
-		return y;
+	public void setSubRegions(SubRegions[] subRegions) {
+		this.subRegions = subRegions;
 	}
 
-	public void setY(Double[] y) {
-		this.y = y;
-	}
+	@Override
 
-	public void getXCord(){
-		xCord = new double[x.length];
-		for(int z = 0; z < x.length; z++){
-			xCord[z] = x[z];
-		}
-	}
-
-	public void getYCord(){
-		yCord = new double[y.length];
-		for(int z = 0; z < y.length; z++){
-			yCord[z] = y[z];
-		}
-	}
-
-    @Override
     public void reset() {
 
     }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import javax.json.*;
 
 import mv.data.DataManager;
+import mv.data.SubRegions;
 import saf.components.AppDataComponent;
 import saf.components.AppFileComponent;
 
@@ -42,10 +43,17 @@ public class FileManager implements AppFileComponent {
 	    int numberOfSubRegions = jsonObject.getInt(JSON_NUMBER_OF_SUBREGIONS);
 	    JsonArray firstSubRegions = jsonObject.getJsonArray(JSON_SUBREGIONS);
 
-	    ArrayList<Double> xCord = new ArrayList<>();
-	    ArrayList<Double> yCord = new ArrayList<>();
+
+
+	    SubRegions[] subRegionArray = new SubRegions[numberOfSubRegions];
 
 	    for(int x = 0; x < numberOfSubRegions; x++){
+
+
+		    ArrayList<Double[]> xCord = new ArrayList<>();
+		    ArrayList<Double[]> yCord = new ArrayList<>();
+			SubRegions temp = new SubRegions();
+
 		    JsonObject subRegionItem = firstSubRegions.getJsonObject(x);
 		    int numberOfPolygons = subRegionItem.getInt
 				    (JSON_NUMBER_OF_SUBREGION_POLYGONS);
@@ -55,22 +63,29 @@ public class FileManager implements AppFileComponent {
 		    for(int z = 0; z < numberOfPolygons; z++) {
 			    JsonArray jsonArray = subPolygons.getJsonArray(z);
 
+			    ArrayList<Double> xs = new ArrayList<>();
+				ArrayList<Double> ys = new ArrayList<>();
+
 			    for(int q = 0; q < jsonArray.size(); q++){
 					JsonObject xyObject = jsonArray.getJsonObject(q);
-				    xCord.add(getDataAsDouble(xyObject, JSON_X));
-				    yCord.add(getDataAsDouble(xyObject, JSON_Y));
+				    xs.add(getDataAsDouble(xyObject, JSON_X));
+				    ys.add(getDataAsDouble(xyObject, JSON_Y));
 			    }
 
+			    xCord.add(xs.toArray(new Double[xs.size()]));
+			    yCord.add(ys.toArray(new Double[ys.size()]));
 		    }
 
+			temp.setX(xCord);
+		    temp.setY(yCord);
+		    subRegionArray[x] = temp;
 	    }
 
-	    dataManager.setX(xCord.toArray(new Double[xCord.size()]));
-	    dataManager.setY(yCord.toArray(new Double[yCord.size()]));
+		dataManager.setSubRegions(subRegionArray);
 
     }
     
-    public double getDataAsDouble(JsonObject json, String dataName) {
+    private double getDataAsDouble(JsonObject json, String dataName) {
 	JsonValue value = json.get(dataName);
 	JsonNumber number = (JsonNumber)value;
 	return number.bigDecimalValue().doubleValue();	
