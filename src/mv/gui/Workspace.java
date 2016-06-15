@@ -66,6 +66,7 @@ public class Workspace extends AppWorkspaceComponent {
     public void reloadWorkspace() {
 	    DataManager datamanager = (DataManager)app.getDataComponent();
 	    SubRegions[] subRegionsArray = datamanager.getSubRegions();
+
 	    gc.setFill(Paint.valueOf(OceanColor));
 	    gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	    gc.setFill(Paint.valueOf(BodyCOlor));
@@ -85,7 +86,7 @@ public class Workspace extends AppWorkspaceComponent {
 		    }
 	    }
 	    gc.stroke();
-
+	    app.getGUI().getAppPane().getCenter().getStyleClass().add("CENTER");
     }
 
     @Override
@@ -124,26 +125,28 @@ public class Workspace extends AppWorkspaceComponent {
 		workspace.getScene().setOnKeyPressed(e-> {
 			switch (e.getCode()) {
 				case UP:
-					gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-					gc.translate(0, 10);
+					gc.clearRect(0, 0, canvas.getWidth()+10, canvas.getHeight
+							()+10);
+					gc.translate(0, 18);
 					reloadWorkspace();
 					break;
 				case DOWN:
-					gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-					gc.translate(0, -10);
+					gc.clearRect(0, 0, canvas.getWidth()+10, canvas.getHeight
+							()+10);
+					gc.translate(0, -18);
 					reloadWorkspace();
 					break;
 				case LEFT:
-					gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-					gc.translate(10, 0);
+					gc.clearRect(0, 0, canvas.getWidth()+10, canvas.getHeight
+							()+10);
+					gc.translate(18, 0);
 					reloadWorkspace();
 					break;
 				case RIGHT:
-					gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+					gc.clearRect(0, 0, canvas.getWidth()+10, canvas.getHeight
+							()+10);
 
-					gc.translate(-10, 0);
+					gc.translate(-18, 0);
 					reloadWorkspace();
 					break;
 				default: break;
