@@ -5,11 +5,13 @@
  */
 package mv.gui;
 
-import javafx.scene.Group;
+import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.transform.Affine;
@@ -18,9 +20,8 @@ import mv.data.SubRegions;
 import saf.components.AppWorkspaceComponent;
 import mv.MapViewerApp;
 
-import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  *
@@ -30,8 +31,8 @@ public class Workspace extends AppWorkspaceComponent {
 	private final String BodyCOlor = "#238f23";
 	private final String OceanColor = "#00a4cb";
 	private final String outlineColor = "#000000";
-
-
+	private static int scaleX = 1;
+	private static int scaleY = 1;
 
     private MapViewerApp app;
 
@@ -52,13 +53,12 @@ public class Workspace extends AppWorkspaceComponent {
 		workspace.getChildren().add(canvas);
 		canvas.heightProperty().bind(workspace.heightProperty());
 		canvas.widthProperty().bind(workspace.widthProperty());
-
-		//Clip the Image in the workspace
-
-
-
-
 		handler();
+
+
+
+
+
 	}
 
 
@@ -66,13 +66,11 @@ public class Workspace extends AppWorkspaceComponent {
     public void reloadWorkspace() {
 	    DataManager datamanager = (DataManager)app.getDataComponent();
 	    SubRegions[] subRegionsArray = datamanager.getSubRegions();
-
 	    gc.setFill(Paint.valueOf(OceanColor));
 	    gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	    gc.setFill(Paint.valueOf(BodyCOlor));
 	    gc.setStroke(Paint.valueOf(outlineColor));
 	    gc.setLineWidth(.3);
-
 	    for (SubRegions temp : subRegionsArray) {
 		    ArrayList<double[]> tempx = temp.getXCord(canvas.getWidth());
 		    ArrayList<double[]> tempy = temp.getYCord(canvas.getHeight());
@@ -103,15 +101,83 @@ public class Workspace extends AppWorkspaceComponent {
 
 
 	private void handler(){
+//		canvas.setOnMousePressed(circleOnMousePressedEventHandler);
+//		canvas.setOnMouseDragged(circleOnMouseDraggedEventHandler);
+
 		canvas.setOnMouseClicked(e-> {
 			if(e.getButton() == MouseButton.PRIMARY){
-				canvas.setScaleX(canvas.getScaleX() * 1.2);
-				canvas.setScaleY(canvas.getScaleY() * 1.2);
+				Affine affine = new Affine();
+				affine.setMxx(++scaleX);
+				affine.setMyy(++scaleY);
+				gc.setTransform(affine);
+				reloadWorkspace();
 			}
-			else if(e.getButton() == MouseButton.SECONDARY){
-				canvas.setScaleX(canvas.getScaleX()/1.2);
-				canvas.setScaleY(canvas.getScaleY()/1.2);
+			if(e.getButton() == MouseButton.SECONDARY){
+				Affine affine = new Affine();
+				affine.setMxx(--scaleX);
+				affine.setMyy(--scaleY);
+				gc.setTransform(affine);
+				reloadWorkspace();
 			}
 		});
+
+		workspace.getScene().setOnKeyPressed(e-> {
+			switch (e.getCode()) {
+				case UP:
+					gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+					gc.translate(0, 10);
+					reloadWorkspace();
+					break;
+				case DOWN:
+					gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+					gc.translate(0, -10);
+					reloadWorkspace();
+					break;
+				case LEFT:
+					gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+					gc.translate(10, 0);
+					reloadWorkspace();
+					break;
+				case RIGHT:
+					gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+					gc.translate(-10, 0);
+					reloadWorkspace();
+					break;
+				default: break;
+			}
+		});
+
+
 	}
+
+//	double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY;
+//	EventHandler<MouseEvent> circleOnMousePressedEventHandler =
+//			new EventHandler<MouseEvent>() {
+//
+//				@Override
+//				public void handle(MouseEvent t) {
+//					orgSceneX = t.getSceneX();
+//					orgSceneY = t.getSceneY();
+//					orgTranslateX = ((Canvas)(t.getSource())).getTranslateX();
+//					orgTranslateY = ((Canvas)(t.getSource())).getTranslateY();
+//				}
+//			};
+//
+//	EventHandler<MouseEvent> circleOnMouseDraggedEventHandler =
+//			new EventHandler<MouseEvent>() {
+//
+//				@Override
+//				public void handle(MouseEvent t) {
+//					double offsetX = t.getSceneX() - orgSceneX;
+//					double offsetY = t.getSceneY() - orgSceneY;
+//					double newTranslateX = orgTranslateX + offsetX;
+//					double newTranslateY = orgTranslateY + offsetY;
+//
+//					((Canvas)(t.getSource())).setTranslateX(newTranslateX);
+//					((Canvas)(t.getSource())).setTranslateY(newTranslateY);
+//				}
+//			};
 }

@@ -9,6 +9,11 @@
     Version:	1.0
 */
 
+
+.CENTER{
+    -fx-background-color: #00A4CB;
+}
+
 .bordered_pane {
     -fx-background-color: #aaaaff;
     -fx-background-radius: 5.0;
