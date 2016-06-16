@@ -38,7 +38,7 @@ public class FileManager implements AppFileComponent {
     @Override
     public void loadData(AppDataComponent data, String filePath) throws IOException {
 	    DataManager dataManager = (DataManager)data;
-
+		dataManager.reset();
 		JsonObject jsonObject = loadJSONFile(filePath);
 	    int numberOfSubRegions = jsonObject.getInt(JSON_NUMBER_OF_SUBREGIONS);
 	    JsonArray firstSubRegions = jsonObject.getJsonArray(JSON_SUBREGIONS);

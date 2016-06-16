@@ -1,5 +1,6 @@
 package mv.data;
 
+import mv.gui.Workspace;
 import saf.components.AppDataComponent;
 import mv.MapViewerApp;
 
@@ -31,5 +32,7 @@ public class DataManager implements AppDataComponent {
 
     public void reset() {
 		subRegions = new SubRegions[0];
+		Workspace ws = (Workspace) app.getWorkspaceComponent();
+		ws.resetZoom();
     }
 }

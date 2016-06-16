@@ -34,153 +34,135 @@ public class Workspace extends AppWorkspaceComponent {
 	private static int scaleX = 1;
 	private static int scaleY = 1;
 
-    private MapViewerApp app;
+	static double zoom = 1.5;
+	static double scale = 1.2;
+	static double originx = 0;
+	static double originy = 0;
+
+	private MapViewerApp app;
 
 	private Canvas canvas;
 	private GraphicsContext gc;
-    
-    public Workspace(MapViewerApp initApp) {
-        app = initApp;
-        workspace = new Pane();
-	    super.activateWorkspace(app.getGUI().getAppPane());
-	    initGUI();
-    }
 
-	private void initGUI(){
+	public Workspace(MapViewerApp initApp) {
+		app = initApp;
+		workspace = new Pane();
+		super.activateWorkspace(app.getGUI().getAppPane());
+		initGUI();
+	}
+
+	private void initGUI() {
 		removeButtons();
-		canvas= new Canvas();
+		canvas = new Canvas();
 		gc = canvas.getGraphicsContext2D();
 		workspace.getChildren().add(canvas);
 		canvas.heightProperty().bind(workspace.heightProperty());
 		canvas.widthProperty().bind(workspace.widthProperty());
 		handler();
-
-
-
-
-
 	}
 
 
-    @Override
-    public void reloadWorkspace() {
-	    DataManager datamanager = (DataManager)app.getDataComponent();
-	    SubRegions[] subRegionsArray = datamanager.getSubRegions();
+	@Override
+	public void reloadWorkspace() {
 
-	    gc.setFill(Paint.valueOf(OceanColor));
-	    gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-	    gc.setFill(Paint.valueOf(BodyCOlor));
-	    gc.setStroke(Paint.valueOf(outlineColor));
-	    gc.setLineWidth(.3);
-	    for (SubRegions temp : subRegionsArray) {
-		    ArrayList<double[]> tempx = temp.getXCord(canvas.getWidth());
-		    ArrayList<double[]> tempy = temp.getYCord(canvas.getHeight());
+		DataManager datamanager = (DataManager) app.getDataComponent();
+		SubRegions[] subRegionsArray = datamanager.getSubRegions();
+		gc.setFill(Paint.valueOf(OceanColor));
+		gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		gc.setFill(Paint.valueOf(BodyCOlor));
+		gc.setStroke(Paint.valueOf(outlineColor));
+		gc.setLineWidth(.3);
+		for (SubRegions temp : subRegionsArray) {
+			ArrayList<double[]> tempx = temp.getXCord(canvas.getWidth());
+			ArrayList<double[]> tempy = temp.getYCord(canvas.getHeight());
 
-		    for (int b = 0; b < tempx.size(); b++) {
-			    double[] x = tempx.get(b);
-			    double[] y = tempy.get(b);
+			for (int b = 0; b < tempx.size(); b++) {
+				double[] x = tempx.get(b);
+				double[] y = tempy.get(b);
 
-			    gc.fillPolygon(x, y, x.length);
-			    gc.strokePolygon(x, y, x.length);
+				gc.fillPolygon(x, y, x.length);
+				gc.strokePolygon(x, y, x.length);
 
-		    }
-	    }
-	    gc.stroke();
-	    app.getGUI().getAppPane().getCenter().getStyleClass().add("CENTER");
-    }
+			}
+		}
+		gc.stroke();
+		app.getGUI().getAppPane().getCenter().getStyleClass().add("CENTER");
+	}
 
-    @Override
-    public void initStyle() {
-        
-    }
+	@Override
+	public void initStyle() {
 
-	private void removeButtons(){
+	}
+
+	private void removeButtons() {
 		FlowPane flowPane = (FlowPane) app.getGUI().getAppPane().getTop();
 		flowPane.getChildren().remove(0);
 		flowPane.getChildren().remove(1);
 	}
 
 
-	private void handler(){
-//		canvas.setOnMousePressed(circleOnMousePressedEventHandler);
-//		canvas.setOnMouseDragged(circleOnMouseDraggedEventHandler);
+	private void handler() {
 
-		canvas.setOnMouseClicked(e-> {
-			if(e.getButton() == MouseButton.PRIMARY){
-				Affine affine = new Affine();
-				affine.setMxx(++scaleX);
-				affine.setMyy(++scaleY);
-				gc.setTransform(affine);
+		canvas.setOnMouseClicked(e -> {
+			if (e.getButton() == MouseButton.PRIMARY) {
+				gc.transform(1, 0, 0, 1, 0, 0);
+				gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
+						() + 10);
+//				gc.translate(originx, originy);
+				gc.scale(zoom, zoom);
+				gc.translate(-(e.getX()/scale +originx + e.getX()/
+						(scale*zoom)), -(e.getY()/scale + originy - e.getY()/
+						(scale*zoom)));
+				originx = e.getX()/scale + originx - e.getX()/(scale*zoom);
+				originy = e.getY()/scale + originy - e.getY()/(scale*zoom);
+				scale *= zoom;
 				reloadWorkspace();
 			}
 			if(e.getButton() == MouseButton.SECONDARY){
-				Affine affine = new Affine();
-				affine.setMxx(--scaleX);
-				affine.setMyy(--scaleY);
-				gc.setTransform(affine);
+				gc.scale(--zoom, --zoom);
 				reloadWorkspace();
 			}
 		});
 
-		workspace.getScene().setOnKeyPressed(e-> {
+		workspace.getScene().setOnKeyPressed(e -> {
 			switch (e.getCode()) {
 				case UP:
-					gc.clearRect(0, 0, canvas.getWidth()+10, canvas.getHeight
-							()+10);
+					gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
+							() + 10);
 					gc.translate(0, 18);
 					reloadWorkspace();
 					break;
 				case DOWN:
-					gc.clearRect(0, 0, canvas.getWidth()+10, canvas.getHeight
-							()+10);
+					gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
+							() + 10);
 					gc.translate(0, -18);
 					reloadWorkspace();
 					break;
 				case LEFT:
-					gc.clearRect(0, 0, canvas.getWidth()+10, canvas.getHeight
-							()+10);
+					gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
+							() + 10);
 					gc.translate(18, 0);
 					reloadWorkspace();
 					break;
 				case RIGHT:
-					gc.clearRect(0, 0, canvas.getWidth()+10, canvas.getHeight
-							()+10);
+					gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
+							() + 10);
 
 					gc.translate(-18, 0);
 					reloadWorkspace();
 					break;
-				default: break;
+				default:
+					break;
 			}
 		});
 
-
 	}
 
-//	double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY;
-//	EventHandler<MouseEvent> circleOnMousePressedEventHandler =
-//			new EventHandler<MouseEvent>() {
-//
-//				@Override
-//				public void handle(MouseEvent t) {
-//					orgSceneX = t.getSceneX();
-//					orgSceneY = t.getSceneY();
-//					orgTranslateX = ((Canvas)(t.getSource())).getTranslateX();
-//					orgTranslateY = ((Canvas)(t.getSource())).getTranslateY();
-//				}
-//			};
-//
-//	EventHandler<MouseEvent> circleOnMouseDraggedEventHandler =
-//			new EventHandler<MouseEvent>() {
-//
-//				@Override
-//				public void handle(MouseEvent t) {
-//					double offsetX = t.getSceneX() - orgSceneX;
-//					double offsetY = t.getSceneY() - orgSceneY;
-//					double newTranslateX = orgTranslateX + offsetX;
-//					double newTranslateY = orgTranslateY + offsetY;
-//
-//					((Canvas)(t.getSource())).setTranslateX(newTranslateX);
-//					((Canvas)(t.getSource())).setTranslateY(newTranslateY);
-//				}
-//			};
+	public void resetZoom(){
+		gc.clearRect(0, 0, canvas.getWidth()+10, canvas.getHeight()+10);
+		zoom = 1.5;
+		scale = 1.2;
+		originx = 0;
+		originy = 0;
+	}
 }
