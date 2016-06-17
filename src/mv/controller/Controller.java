@@ -12,6 +12,7 @@ import mv.MapViewerApp;
  */
 public class Controller {
 	MapViewerApp app;
+	private double gcScale = 1;
 
 	public Controller(MapViewerApp app){
 		this.app = app;
@@ -26,6 +27,7 @@ public class Controller {
 			double offsetY = -(e.getY() - canvas.getHeight()/2);
 			gc.translate(offsetX, offsetY);
 			double zoomfactor = 1.25;
+			gcScale+= zoomfactor;
 			gc.transform(zoomfactor,0,0,zoomfactor,-(zoomfactor-1)*canvas.getWidth()/2,-(zoomfactor-1)*canvas.getHeight()/2);
 			app.getWorkspaceComponent().reloadWorkspace();
 		}
@@ -40,28 +42,32 @@ public class Controller {
 			case UP:
 				gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
 						() + 10);
-				gc.translate(0, canvas.getHeight()/20);
+				gc.translate(0, canvas.getHeight()/(10*gcScale));
 				app.getWorkspaceComponent().reloadWorkspace();
 				break;
+
 			case DOWN:
 				gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
 						() + 10);
-				gc.translate(0, -canvas.getHeight()/20);
+				gc.translate(0, -canvas.getHeight()/(10*gcScale));
 				app.getWorkspaceComponent().reloadWorkspace();
 				break;
+
 			case LEFT:
 				gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
 						() + 10);
-				gc.translate(canvas.getWidth()/20, 0);
+				gc.translate(canvas.getWidth()/(10*gcScale), 0);
 				app.getWorkspaceComponent().reloadWorkspace();
 				break;
+
 			case RIGHT:
 				gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
 						() + 10);
 
-				gc.translate(-canvas.getWidth()/20, 0);
+				gc.translate(-canvas.getWidth()/(10*gcScale), 0);
 				app.getWorkspaceComponent().reloadWorkspace();
 				break;
+
 			default:
 				break;
 		}
