@@ -13,11 +13,9 @@ import mv.gui.Workspace;
  * Created by jappatel on 6/16/16.
  */
 public class Controller {
-	MapViewerApp app;
+	private MapViewerApp app;
 	private double gcScale = 1;
-	private boolean gridOn = false;
-	private double gridLine = 0;
-
+	private double zoomfactor = 1.25;
 	public Controller(MapViewerApp app){
 		this.app = app;
 	}
@@ -30,12 +28,22 @@ public class Controller {
 			double offsetX = -(e.getX() - canvas.getWidth()/2);
 			double offsetY = -(e.getY() - canvas.getHeight()/2);
 			gc.translate(offsetX, offsetY);
-			double zoomfactor = 1.25;
-			gcScale+= zoomfactor;
-			gc.transform(zoomfactor,0,0,zoomfactor,-(zoomfactor-1)*canvas.getWidth()/2,-(zoomfactor-1)*canvas.getHeight()/2);
+
+			gcScale += zoomfactor;
+			gc.transform(zoomfactor,0,0,zoomfactor,-(zoomfactor-1)*(canvas
+					.getWidth())/2,-(zoomfactor-1)*canvas.getHeight()/2);
 			app.getWorkspaceComponent().reloadWorkspace();
 		}
 		if(e.getButton() == MouseButton.SECONDARY){
+			gc.transform(1, 0, 0, 1, 0, 0);
+			gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
+					() + 10);
+			double offsetX = -(e.getX() - canvas.getWidth()/2);
+			double offsetY = -(e.getY() - canvas.getHeight()/2);
+			gc.translate(offsetX, offsetY);
+			gcScale -= zoomfactor;
+			gc.transform(1/zoomfactor,0,0,1/zoomfactor,(1- 1/zoomfactor)
+					*canvas.getWidth()/2,(1- 1/zoomfactor)*canvas.getHeight()/2);
 
 			app.getWorkspaceComponent().reloadWorkspace();
 		}
@@ -45,29 +53,31 @@ public class Controller {
 		try {
 			switch (e.getCode()) {
 				case UP:
-					gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
-							() + 10);
+					gc.clearRect(-20, -20, canvas.getWidth() + 20, canvas
+							.getHeight() + 20);
 					gc.translate(0, canvas.getHeight() / (10 * gcScale));
 					app.getWorkspaceComponent().reloadWorkspace();
 					break;
 
 				case DOWN:
-					gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
-							() + 10);
+					gc.clearRect(-20, -20, canvas.getWidth() + 20, canvas
+							.getHeight() + 20);
 					gc.translate(0, -canvas.getHeight() / (10 * gcScale));
 					app.getWorkspaceComponent().reloadWorkspace();
 					break;
 
 				case LEFT:
-					gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
-							() + 10);
+					gc.clearRect(-20, -20, canvas.getWidth() + 20, canvas
+							.getHeight
+							() + 20);
 					gc.translate(canvas.getWidth() / (10 * gcScale), 0);
 					app.getWorkspaceComponent().reloadWorkspace();
 					break;
 
 				case RIGHT:
-					gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
-							() + 10);
+					gc.clearRect(-20, -20, canvas.getWidth() + 20, canvas
+							.getHeight
+							() + 20);
 
 					gc.translate(-canvas.getWidth() / (10 * gcScale), 0);
 					app.getWorkspaceComponent().reloadWorkspace();
