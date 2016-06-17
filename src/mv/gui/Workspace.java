@@ -5,6 +5,7 @@
  */
 package mv.gui;
 
+import com.sun.javafx.tk.Toolkit;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -31,13 +32,6 @@ public class Workspace extends AppWorkspaceComponent {
 	private final String BodyCOlor = "#238f23";
 	private final String OceanColor = "#00a4cb";
 	private final String outlineColor = "#000000";
-	private static int scaleX = 1;
-	private static int scaleY = 1;
-
-	static double zoom = 1.5;
-	static double scale = 1.2;
-	static double originx = 0;
-	static double originy = 0;
 
 	private MapViewerApp app;
 
@@ -67,6 +61,7 @@ public class Workspace extends AppWorkspaceComponent {
 
 		DataManager datamanager = (DataManager) app.getDataComponent();
 		SubRegions[] subRegionsArray = datamanager.getSubRegions();
+
 		gc.setFill(Paint.valueOf(OceanColor));
 		gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		gc.setFill(Paint.valueOf(BodyCOlor));
@@ -108,18 +103,16 @@ public class Workspace extends AppWorkspaceComponent {
 				gc.transform(1, 0, 0, 1, 0, 0);
 				gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
 						() + 10);
-//				gc.translate(originx, originy);
-				gc.scale(zoom, zoom);
-				gc.translate(-(e.getX()/scale +originx + e.getX()/
-						(scale*zoom)), -(e.getY()/scale + originy - e.getY()/
-						(scale*zoom)));
-				originx = e.getX()/scale + originx - e.getX()/(scale*zoom);
-				originy = e.getY()/scale + originy - e.getY()/(scale*zoom);
-				scale *= zoom;
+				double offsetX = -(e.getX() - canvas.getWidth()/2);
+				double offsetY = -(e.getY() - canvas.getHeight()/2);
+				gc.translate(offsetX, offsetY);
+				double zoomfactor = 1.25;
+				gc.transform(zoomfactor,0,0,zoomfactor,-(zoomfactor-1)*canvas.getWidth()/2,-(zoomfactor-1)*canvas.getHeight()/2);
+
 				reloadWorkspace();
 			}
 			if(e.getButton() == MouseButton.SECONDARY){
-				gc.scale(--zoom, --zoom);
+
 				reloadWorkspace();
 			}
 		});
@@ -129,26 +122,26 @@ public class Workspace extends AppWorkspaceComponent {
 				case UP:
 					gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
 							() + 10);
-					gc.translate(0, 18);
+					gc.translate(0, canvas.getHeight()/20);
 					reloadWorkspace();
 					break;
 				case DOWN:
 					gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
 							() + 10);
-					gc.translate(0, -18);
+					gc.translate(0, -canvas.getHeight()/20);
 					reloadWorkspace();
 					break;
 				case LEFT:
 					gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
 							() + 10);
-					gc.translate(18, 0);
+					gc.translate(canvas.getWidth()/20, 0);
 					reloadWorkspace();
 					break;
 				case RIGHT:
 					gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
 							() + 10);
 
-					gc.translate(-18, 0);
+					gc.translate(-canvas.getWidth()/20, 0);
 					reloadWorkspace();
 					break;
 				default:
@@ -160,9 +153,5 @@ public class Workspace extends AppWorkspaceComponent {
 
 	public void resetZoom(){
 		gc.clearRect(0, 0, canvas.getWidth()+10, canvas.getHeight()+10);
-		zoom = 1.5;
-		scale = 1.2;
-		originx = 0;
-		originy = 0;
 	}
 }
