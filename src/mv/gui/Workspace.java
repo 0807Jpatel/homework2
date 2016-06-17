@@ -24,6 +24,8 @@ import saf.components.AppWorkspaceComponent;
 import mv.MapViewerApp;
 
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -43,7 +45,6 @@ public class Workspace extends AppWorkspaceComponent {
 	private boolean gridOn = false;
 	private double gridLine = 0;
 	private double gridLineV = 0;
-	private StackPane sp = new StackPane();
 
 	public Workspace(MapViewerApp initApp) {
 		app = initApp;
@@ -70,7 +71,7 @@ public class Workspace extends AppWorkspaceComponent {
 		DataManager datamanager = (DataManager) app.getDataComponent();
 		SubRegions[] subRegionsArray = datamanager.getSubRegions();
 
-		gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight() + 10);
+		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		gc.setFill(Paint.valueOf(OceanColor));
 		gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		gc.setFill(Paint.valueOf(BodyCOlor));
@@ -119,7 +120,7 @@ public class Workspace extends AppWorkspaceComponent {
 	}
 
 	public void resetZoom(){
-		gc.clearRect(0, 0, canvas.getWidth()+10, canvas.getHeight()+10);
+		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 
 	public boolean isGridOn() {

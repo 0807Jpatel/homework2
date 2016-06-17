@@ -15,7 +15,7 @@ import mv.gui.Workspace;
 public class Controller {
 	private MapViewerApp app;
 	private double gcScale = 1;
-	private double zoomfactor = 1.25;
+	private double zoomfactor = 1.5;
 	public Controller(MapViewerApp app){
 		this.app = app;
 	}
@@ -23,12 +23,16 @@ public class Controller {
 	public void mouseClick(Canvas canvas, MouseEvent e, GraphicsContext gc){
 		if (e.getButton() == MouseButton.PRIMARY) {
 			gc.transform(1, 0, 0, 1, 0, 0);
-			gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
-					() + 10);
+			gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight() + 10);
 			double offsetX = -(e.getX() - canvas.getWidth()/2);
 			double offsetY = -(e.getY() - canvas.getHeight()/2);
 			gc.translate(offsetX, offsetY);
 
+
+//			double offsetX = -(e.getX() * .5);
+//			double offsetY = -(e.getY() * .5);
+//			gc.translate(offsetX, offsetY);
+//			gc.scale(zoomfactor, zoomfactor);
 			gcScale += zoomfactor;
 			gc.transform(zoomfactor,0,0,zoomfactor,-(zoomfactor-1)*(canvas
 					.getWidth())/2,-(zoomfactor-1)*canvas.getHeight()/2);
@@ -36,11 +40,14 @@ public class Controller {
 		}
 		if(e.getButton() == MouseButton.SECONDARY){
 			gc.transform(1, 0, 0, 1, 0, 0);
-			gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
-					() + 10);
+			gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 			double offsetX = -(e.getX() - canvas.getWidth()/2);
 			double offsetY = -(e.getY() - canvas.getHeight()/2);
+
+//			double offsetX = e.getX() * .5;
+//			double offsetY = e.getY() * .5;
 			gc.translate(offsetX, offsetY);
+//			gc.scale(1/zoomfactor, 1/zoomfactor);
 			gcScale -= zoomfactor;
 			gc.transform(1/zoomfactor,0,0,1/zoomfactor,(1- 1/zoomfactor)
 					*canvas.getWidth()/2,(1- 1/zoomfactor)*canvas.getHeight()/2);
@@ -53,31 +60,31 @@ public class Controller {
 		try {
 			switch (e.getCode()) {
 				case UP:
-					gc.clearRect(-20, -20, canvas.getWidth() + 20, canvas
-							.getHeight() + 20);
+//					gc.clearRect(-20, -20, canvas.getWidth() + 20, canvas
+//							.getHeight() + 20);
 					gc.translate(0, canvas.getHeight() / (10 * gcScale));
 					app.getWorkspaceComponent().reloadWorkspace();
 					break;
 
 				case DOWN:
-					gc.clearRect(-20, -20, canvas.getWidth() + 20, canvas
-							.getHeight() + 20);
+//					gc.clearRect(-20, -20, canvas.getWidth() + 20, canvas
+//							.getHeight() + 20);
 					gc.translate(0, -canvas.getHeight() / (10 * gcScale));
 					app.getWorkspaceComponent().reloadWorkspace();
 					break;
 
 				case LEFT:
-					gc.clearRect(-20, -20, canvas.getWidth() + 20, canvas
-							.getHeight
-							() + 20);
+//					gc.clearRect(-20, -20, canvas.getWidth() + 20, canvas
+//							.getHeight
+//							() + 20);
 					gc.translate(canvas.getWidth() / (10 * gcScale), 0);
 					app.getWorkspaceComponent().reloadWorkspace();
 					break;
 
 				case RIGHT:
-					gc.clearRect(-20, -20, canvas.getWidth() + 20, canvas
-							.getHeight
-							() + 20);
+//					gc.clearRect(-20, -20, canvas.getWidth() + 20, canvas
+//							.getHeight
+//							() + 20);
 
 					gc.translate(-canvas.getWidth() / (10 * gcScale), 0);
 					app.getWorkspaceComponent().reloadWorkspace();
