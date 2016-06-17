@@ -5,23 +5,19 @@
  */
 package mv.gui;
 
-import com.sun.javafx.tk.Toolkit;
-import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
-import javafx.scene.transform.Affine;
+import mv.controller.Controller;
 import mv.data.DataManager;
 import mv.data.SubRegions;
 import saf.components.AppWorkspaceComponent;
 import mv.MapViewerApp;
 
-import java.awt.geom.AffineTransform;
+
 import java.util.ArrayList;
 
 /**
@@ -34,13 +30,14 @@ public class Workspace extends AppWorkspaceComponent {
 	private final String outlineColor = "#000000";
 
 	private MapViewerApp app;
-
+	private Controller controller;
 	private Canvas canvas;
 	private GraphicsContext gc;
 
 	public Workspace(MapViewerApp initApp) {
 		app = initApp;
 		workspace = new Pane();
+		controller = new Controller(app);
 		super.activateWorkspace(app.getGUI().getAppPane());
 		initGUI();
 	}
@@ -99,54 +96,11 @@ public class Workspace extends AppWorkspaceComponent {
 	private void handler() {
 
 		canvas.setOnMouseClicked(e -> {
-			if (e.getButton() == MouseButton.PRIMARY) {
-				gc.transform(1, 0, 0, 1, 0, 0);
-				gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
-						() + 10);
-				double offsetX = -(e.getX() - canvas.getWidth()/2);
-				double offsetY = -(e.getY() - canvas.getHeight()/2);
-				gc.translate(offsetX, offsetY);
-				double zoomfactor = 1.25;
-				gc.transform(zoomfactor,0,0,zoomfactor,-(zoomfactor-1)*canvas.getWidth()/2,-(zoomfactor-1)*canvas.getHeight()/2);
-
-				reloadWorkspace();
-			}
-			if(e.getButton() == MouseButton.SECONDARY){
-
-				reloadWorkspace();
-			}
+			controller.mouseClick(canvas, e, gc);
 		});
 
 		workspace.getScene().setOnKeyPressed(e -> {
-			switch (e.getCode()) {
-				case UP:
-					gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
-							() + 10);
-					gc.translate(0, canvas.getHeight()/20);
-					reloadWorkspace();
-					break;
-				case DOWN:
-					gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
-							() + 10);
-					gc.translate(0, -canvas.getHeight()/20);
-					reloadWorkspace();
-					break;
-				case LEFT:
-					gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
-							() + 10);
-					gc.translate(canvas.getWidth()/20, 0);
-					reloadWorkspace();
-					break;
-				case RIGHT:
-					gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
-							() + 10);
-
-					gc.translate(-canvas.getWidth()/20, 0);
-					reloadWorkspace();
-					break;
-				default:
-					break;
-			}
+			controller.directionalKey(canvas, e, gc);
 		});
 
 	}

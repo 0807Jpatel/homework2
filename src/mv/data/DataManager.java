@@ -35,4 +35,9 @@ public class DataManager implements AppDataComponent {
 		Workspace ws = (Workspace) app.getWorkspaceComponent();
 		ws.resetZoom();
     }
+
+	public MapViewerApp getApp() {
+		return app;
+	}
+
 }

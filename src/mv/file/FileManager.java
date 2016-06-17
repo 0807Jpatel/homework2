@@ -82,6 +82,7 @@ public class FileManager implements AppFileComponent {
 	    }
 
 		dataManager.setSubRegions(subRegionArray);
+		((DataManager) data).getApp().getWorkspaceComponent().reloadWorkspace();
 
     }
     
