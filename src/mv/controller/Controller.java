@@ -5,7 +5,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Paint;
 import mv.MapViewerApp;
+import mv.gui.Workspace;
 
 /**
  * Created by jappatel on 6/16/16.
@@ -13,6 +15,8 @@ import mv.MapViewerApp;
 public class Controller {
 	MapViewerApp app;
 	private double gcScale = 1;
+	private boolean gridOn = false;
+	private double gridLine = 0;
 
 	public Controller(MapViewerApp app){
 		this.app = app;
@@ -38,38 +42,49 @@ public class Controller {
 	}
 
 	public void directionalKey(Canvas canvas, KeyEvent e, GraphicsContext gc){
-		switch (e.getCode()) {
-			case UP:
-				gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
-						() + 10);
-				gc.translate(0, canvas.getHeight()/(10*gcScale));
-				app.getWorkspaceComponent().reloadWorkspace();
-				break;
+		try {
+			switch (e.getCode()) {
+				case UP:
+					gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
+							() + 10);
+					gc.translate(0, canvas.getHeight() / (10 * gcScale));
+					app.getWorkspaceComponent().reloadWorkspace();
+					break;
 
-			case DOWN:
-				gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
-						() + 10);
-				gc.translate(0, -canvas.getHeight()/(10*gcScale));
-				app.getWorkspaceComponent().reloadWorkspace();
-				break;
+				case DOWN:
+					gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
+							() + 10);
+					gc.translate(0, -canvas.getHeight() / (10 * gcScale));
+					app.getWorkspaceComponent().reloadWorkspace();
+					break;
 
-			case LEFT:
-				gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
-						() + 10);
-				gc.translate(canvas.getWidth()/(10*gcScale), 0);
-				app.getWorkspaceComponent().reloadWorkspace();
-				break;
+				case LEFT:
+					gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
+							() + 10);
+					gc.translate(canvas.getWidth() / (10 * gcScale), 0);
+					app.getWorkspaceComponent().reloadWorkspace();
+					break;
 
-			case RIGHT:
-				gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
-						() + 10);
+				case RIGHT:
+					gc.clearRect(0, 0, canvas.getWidth() + 10, canvas.getHeight
+							() + 10);
 
-				gc.translate(-canvas.getWidth()/(10*gcScale), 0);
-				app.getWorkspaceComponent().reloadWorkspace();
-				break;
+					gc.translate(-canvas.getWidth() / (10 * gcScale), 0);
+					app.getWorkspaceComponent().reloadWorkspace();
+					break;
 
-			default:
-				break;
+				case G:
+					((Workspace) app.getWorkspaceComponent()).setGridOn(!(
+							(Workspace) app.getWorkspaceComponent()).isGridOn());
+					app.getWorkspaceComponent().reloadWorkspace();
+					break;
+
+				default:
+					break;
+			}
+		}catch (Exception ex){
+
 		}
 	}
+
 }

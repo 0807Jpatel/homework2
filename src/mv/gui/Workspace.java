@@ -33,6 +33,9 @@ public class Workspace extends AppWorkspaceComponent {
 	private Controller controller;
 	private Canvas canvas;
 	private GraphicsContext gc;
+	private boolean gridOn = false;
+	private double gridLine = 0;
+	private double gridLineV = 0;
 
 	public Workspace(MapViewerApp initApp) {
 		app = initApp;
@@ -77,19 +80,46 @@ public class Workspace extends AppWorkspaceComponent {
 
 			}
 		}
+
+		if(gridOn){
+			gc.setLineWidth(.8);
+			gc.setStroke(Paint.valueOf("#ffffff"));
+			gc.setLineDashes(5);
+
+			for(int x = 0; x <= 12; x++) {
+				if(x == 5) {
+					gc.setLineDashes(0);
+					gc.strokeLine(gridLine, 0, gridLine, canvas.getHeight());
+					gridLine += (canvas.getWidth() * .0833);
+					gc.setLineDashes(5);
+				}
+				else{
+					gc.strokeLine(gridLine, 0, gridLine, canvas.getHeight());
+					gridLine += (canvas.getWidth() * .0833);
+				}
+			}
+
+			for(int x = 0; x <= 6; x++){
+				if(x == 2){
+					gc.setLineDashes(0);
+					gc.strokeLine(0, gridLineV, canvas.getWidth(), gridLineV);
+					gridLineV += (canvas.getHeight() * .166);
+					gc.setLineDashes(5);
+				}
+				else{
+					gc.strokeLine(0, gridLineV, canvas.getWidth(), gridLineV);
+					gridLineV += (canvas.getHeight() * .166);
+				}
+			}
+			gridLineV = 0;
+			gridLine = 0;
+			gridOn = true;
+			gc.setLineWidth(.3);
+		}
+
+		gc.setLineDashes(0);
 		gc.stroke();
 		app.getGUI().getAppPane().getCenter().getStyleClass().add("CENTER");
-	}
-
-	@Override
-	public void initStyle() {
-
-	}
-
-	private void removeButtons() {
-		FlowPane flowPane = (FlowPane) app.getGUI().getAppPane().getTop();
-		flowPane.getChildren().remove(0);
-		flowPane.getChildren().remove(1);
 	}
 
 
@@ -99,13 +129,32 @@ public class Workspace extends AppWorkspaceComponent {
 			controller.mouseClick(canvas, e, gc);
 		});
 
-		workspace.getScene().setOnKeyPressed(e -> {
+		canvas.getScene().setOnKeyPressed(e -> {
 			controller.directionalKey(canvas, e, gc);
 		});
 
 	}
 
+	private void removeButtons() {
+		FlowPane flowPane = (FlowPane) app.getGUI().getAppPane().getTop();
+		flowPane.getChildren().remove(0);
+		flowPane.getChildren().remove(1);
+	}
+
 	public void resetZoom(){
 		gc.clearRect(0, 0, canvas.getWidth()+10, canvas.getHeight()+10);
+	}
+
+	public boolean isGridOn() {
+		return gridOn;
+	}
+
+	public void setGridOn(boolean gridOn) {
+		this.gridOn = gridOn;
+	}
+
+	@Override
+	public void initStyle() {
+
 	}
 }
