@@ -14,7 +14,6 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 import mv.controller.Controller;
@@ -70,8 +69,6 @@ public class Workspace extends AppWorkspaceComponent {
 
 		DataManager datamanager = (DataManager) app.getDataComponent();
 		SubRegions[] subRegionsArray = datamanager.getSubRegions();
-
-		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		gc.setFill(Paint.valueOf(OceanColor));
 		gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		gc.setFill(Paint.valueOf(BodyCOlor));
@@ -84,8 +81,8 @@ public class Workspace extends AppWorkspaceComponent {
 			for (int b = 0; b < tempx.size(); b++) {
 				double[] x = tempx.get(b);
 				double[] y = tempy.get(b);
-				gc.fillPolygon(x, y, x.length);
 				gc.strokePolygon(x, y, x.length);
+				gc.fillPolygon(x, y, x.length);
 			}
 		}
 
@@ -96,6 +93,7 @@ public class Workspace extends AppWorkspaceComponent {
 
 		gc.setLineDashes(0);
 		gc.stroke();
+
 		app.getGUI().getAppPane().getCenter().getStyleClass().add("CENTER");
 
 	}
@@ -121,6 +119,7 @@ public class Workspace extends AppWorkspaceComponent {
 
 	public void resetZoom(){
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		gc.setTransform(1, 0, 0, 1, 0, 0);
 	}
 
 	public boolean isGridOn() {

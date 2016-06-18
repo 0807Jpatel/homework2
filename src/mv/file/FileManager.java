@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import javax.json.*;
-
 import mv.data.DataManager;
 import mv.data.SubRegions;
 import saf.components.AppDataComponent;
