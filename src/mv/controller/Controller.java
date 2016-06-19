@@ -22,22 +22,27 @@ public class Controller {
 
 	public void mouseClick(Canvas canvas, MouseEvent e, GraphicsContext gc){
 		if (e.getButton() == MouseButton.PRIMARY) {
-//			gc.transform(1, 0, 0, 1, 0, 0);
+			gc.transform(1, 0, 0, 1, 0, 0);
 			gc.clearRect(0, 0, canvas.getWidth()+30, canvas.getHeight()+30);
-//			double offsetX = -(e.getX() - canvas.getWidth()/2);
-//			double offsetY = -(e.getY() - canvas.getHeight()/2);
-//			gc.translate(offsetX, offsetY);
-//			gcScale += zoomfactor;
-//			gc.transform(zoomfactor,0,0,zoomfactor,-(zoomfactor-1)*(canvas
-//					.getWidth())/2,-(zoomfactor-1)*canvas.getHeight()/2);
-			gc.scale(zoomfactor, zoomfactor);
+
+			//Make the pointer point center
+			double offsetX = -(e.getX() - canvas.getWidth()/2);
+			double offsetY = -(e.getY() - canvas.getHeight()/2);
+			gc.translate(offsetX, offsetY);
+
+			gcScale += zoomfactor;
+			//This is code that scales from center
+			gc.transform(zoomfactor,0,0,zoomfactor,-(zoomfactor-1)*(canvas.getWidth())/2,-(zoomfactor-1)*canvas.getHeight()/2);
+
+
 			app.getWorkspaceComponent().reloadWorkspace();
 		}
 		if(e.getButton() == MouseButton.SECONDARY){
 //			gc.transform(1, 0, 0, 1, 0, 0);
 			gc.clearRect(0, 0, canvas.getWidth()+30, canvas.getHeight()+30);
 			gc.scale(1/zoomfactor, 1/zoomfactor);
-//			gc.translate(200, 200);
+			gcScale -= zoomfactor;
+			gc.translate(100, 100);
 			app.getWorkspaceComponent().reloadWorkspace();
 		}
 	}
@@ -46,26 +51,30 @@ public class Controller {
 		try {
 			switch (e.getCode()) {
 				case UP:
-					gc.clearRect(0, 0, canvas.getWidth()+30, canvas.getHeight()+30);
-					gc.translate(0, canvas.getHeight() / (20 * gcScale));
+					gc.clearRect(-5, -5, canvas.getWidth()+30, canvas.getHeight
+							()+30);
+					gc.translate(0, canvas.getHeight() / (10 * gcScale));
 					app.getWorkspaceComponent().reloadWorkspace();
 					break;
 
 				case DOWN:
-					gc.clearRect(0, 0, canvas.getWidth()+30, canvas.getHeight()+30);
-					gc.translate(0, -canvas.getHeight() / (20 * gcScale));
+					gc.clearRect(-5, -5, canvas.getWidth()+30, canvas.getHeight
+							()+30);
+					gc.translate(0, -canvas.getHeight() / (10 * gcScale));
 					app.getWorkspaceComponent().reloadWorkspace();
 					break;
 
 				case LEFT:
-					gc.clearRect(0, 0, canvas.getWidth()+30, canvas.getHeight()+30);
-					gc.translate(canvas.getWidth() / (20 * gcScale), 0);
+					gc.clearRect(-5, -5, canvas.getWidth()+30, canvas.getHeight
+							()+30);
+					gc.translate(canvas.getWidth() / (10 * gcScale), 0);
 					app.getWorkspaceComponent().reloadWorkspace();
 					break;
 
 				case RIGHT:
-					gc.clearRect(0, 0, canvas.getWidth()+30, canvas.getHeight()+30);
-					gc.translate(-canvas.getWidth() / (20 * gcScale), 0);
+					gc.clearRect(-5, -5, canvas.getWidth()+30, canvas.getHeight
+							()+30);
+					gc.translate(-canvas.getWidth() / (10 * gcScale), 0);
 					app.getWorkspaceComponent().reloadWorkspace();
 					break;
 

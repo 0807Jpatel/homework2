@@ -120,6 +120,7 @@ public class Workspace extends AppWorkspaceComponent {
 	public void resetZoom(){
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		gc.setTransform(1, 0, 0, 1, 0, 0);
+		gridOn = false;
 	}
 
 	public boolean isGridOn() {
@@ -140,29 +141,29 @@ public class Workspace extends AppWorkspaceComponent {
 		gc.setStroke(Paint.valueOf("#ffffff"));
 		gc.setLineDashes(5);
 
-		for(int x = 0; x < 11; x++) {
-			if(x == 5) {
+		for(int x = 0; x <= 12; x++) {
+			if(x == 6) {
 				gc.setLineDashes(0);
-				gridLine += (canvas.getWidth() * .0833);
 				gc.strokeLine(gridLine, 0, gridLine, canvas.getHeight());
+				gridLine += (canvas.getWidth() * .0833);
 				gc.setLineDashes(5);
 			}
 			else{
-				gridLine += (canvas.getWidth() * .0833);
 				gc.strokeLine(gridLine, 0, gridLine, canvas.getHeight());
+				gridLine += (canvas.getWidth() * .0833);
 			}
 		}
 
-		for(int x = 0; x < 5; x++){
-			if(x == 2){
+		for(int x = 0; x <= 6; x++){
+			if(x == 3){
 				gc.setLineDashes(0);
-				gridLineV += (canvas.getHeight() * .166);
 				gc.strokeLine(0, gridLineV, canvas.getWidth(), gridLineV);
+				gridLineV += (canvas.getHeight() * .166);
 				gc.setLineDashes(5);
 			}
 			else{
-				gridLineV += (canvas.getHeight() * .166);
 				gc.strokeLine(0, gridLineV, canvas.getWidth(), gridLineV);
+				gridLineV += (canvas.getHeight() * .166);
 			}
 		}
 		gc.setLineDashes(0);
